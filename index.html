@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trustman CRM — The Roofing CRM Built By Roofers</title>
+<meta name="description" content="Stop overpaying for AccuLynx. Get hail maps, pipeline management, roof measurements, AI scheduling, and more — at half the price.">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #0a0a0a; color: #fff; overflow-x: hidden; }
+
+/* Hero */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  background: radial-gradient(ellipse at top, #1a0f00 0%, #0a0a0a 60%);
+  position: relative;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="none" stroke="%23222" stroke-width="0.3" x="0" y="0" width="10" height="10"/></svg>') repeat;
+  background-size: 40px;
+  opacity: 0.3;
+}
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
+.badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.hero h1 {
+  font-size: clamp(36px, 7vw, 64px);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fff 30%, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p {
+  font-size: 18px;
+  color: #aaa;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
+.hero-price {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 32px;
+}
+.hero-price s { color: #666; }
+.hero-price strong { color: #f97316; font-size: 28px; }
+
+.cta-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+  padding: 18px 48px;
+  border-radius: 60px;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 30px rgba(249,115,22,0.4);
+}
+.cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(249,115,22,0.5);
+}
+.cta-sub {
+  display: block;
+  margin-top: 12px;
+  font-size: 13px;
+  color: #888;
+}
+
+/* Logos/Trust */
+.trust-bar {
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+}
+.trust-bar p { color: #555; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+.trust-logos { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; opacity: 0.4; }
+.trust-logos span { font-size: 16px; color: #666; font-weight: 700; }
+
+/* Problem Section */
+.problem {
+  padding: 80px 20px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+.problem h2 {
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #fff;
+}
+.problem p {
+  font-size: 16px;
+  color: #999;
+  line-height: 1.8;
+}
+.pain-points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 32px;
+  text-align: left;
+}
+.pain-point {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 20px;
+}
+.pain-point .emoji { font-size: 24px; margin-bottom: 8px; }
+.pain-point h4 { font-size: 15px; font-weight: 700; margin-bottom: 6px; color: #f87171; }
+.pain-point p { font-size: 13px; color: #888; line-height: 1.6; }
+
+/* Features */
+.features {
+  padding: 80px 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.features h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 48px;
+}
+.features h2 span { color: #f97316; }
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.feature-card {
+  background: linear-gradient(145deg, #111, #0d0d0d);
+  border: 1px solid #1a1a1a;
+  border-radius: 20px;
+  padding: 28px;
+  transition: border-color 0.3s, transform 0.2s;
+}
+.feature-card:hover {
+  border-color: #f97316;
+  transform: translateY(-4px);
+}
+.feature-card .icon { font-size: 32px; margin-bottom: 12px; }
+.feature-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: #888; line-height: 1.7; }
+.feature-card .tag {
+  display: inline-block;
+  background: #f97316;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+
+/* Comparison */
+.compare {
+  padding: 80px 20px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.compare h2 {
+  text-align: center;
+  font-size: 32px;
+  font-weight: 800;
+  margin-bottom: 40px;
+}
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.compare-table th {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 2px solid #222;
+  font-weight: 700;
+}
+.compare-table th:nth-child(2) { color: #f97316; text-align: center; }
+.compare-table th:nth-child(3) { color: #666; text-align: center; }
+.compare-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #1a1a1a;
+}
+.compare-table td:nth-child(2),
+.compare-table td:nth-child(3) { text-align: center; }
+.check { color: #22c55e; font-weight: 800; }
+.cross { color: #555; }
+.compare-table tr:hover { background: #111; }
+
+/* Pricing */
+.pricing {
+  padding: 80px 20px;
+  text-align: center;
+  background: radial-gradient(ellipse at bottom, #1a0f00 0%, #0a0a0a 60%);
+}
+.pricing h2 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+.pricing .sub { color: #888; font-size: 16px; margin-bottom: 40px; }
+.price-cards {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.price-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 24px;
+  padding: 36px 32px;
+  width: 280px;
+  text-align: left;
+  position: relative;
+}
+.price-card.popular {
+  border-color: #f97316;
+  box-shadow: 0 0 40px rgba(249,115,22,0.15);
+}
+.price-card.popular::before {
+  content: 'MOST POPULAR';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #f97316;
+  color: #fff;
+  padding: 4px 16px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+.price-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+.price-card .price { font-size: 40px; font-weight: 900; color: #f97316; margin: 16px 0 4px; }
+.price-card .price span { font-size: 16px; color: #888; font-weight: 400; }
+.price-card ul { list-style: none; margin: 20px 0; }
+.price-card li { font-size: 13px; color: #ccc; padding: 6px 0; border-bottom: 1px solid #1a1a1a; }
+.price-card li::before { content: '✅ '; }
+.price-card .card-cta {
+  display: block;
+  text-align: center;
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 800;
+  font-size: 14px;
+  text-decoration: none;
+  margin-top: 20px;
+  transition: transform 0.2s;
+}
+.price-card .card-cta:hover { transform: scale(1.03); }
+.price-card.basic .card-cta { background: #333; }
+
+/* Testimonial / Social Proof */
+.social-proof {
+  padding: 60px 20px;
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.quote {
+  font-size: 20px;
+  font-style: italic;
+  color: #ccc;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.quote-author { color: #888; font-size: 14px; }
+
+/* CTA Bottom */
+.bottom-cta {
+  padding: 80px 20px;
+  text-align: center;
+}
+.bottom-cta h2 { font-size: 36px; font-weight: 900; margin-bottom: 16px; }
+.bottom-cta p { color: #888; font-size: 16px; margin-bottom: 32px; }
+
+/* Footer */
+footer {
+  padding: 40px 20px;
+  text-align: center;
+  border-top: 1px solid #1a1a1a;
+  color: #555;
+  font-size: 13px;
+}
+footer a { color: #f97316; text-decoration: none; }
+
+/* Mobile */
+@media (max-width: 640px) {
+  .pain-points { grid-template-columns: 1fr; }
+  .price-cards { flex-direction: column; align-items: center; }
+  .compare-table { font-size: 12px; }
+  .compare-table th, .compare-table td { padding: 10px 8px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="badge">🔨 Built By Roofers, For Roofers</div>
+    <h1>Stop Overpaying for Your Roofing CRM</h1>
+    <p>Hail maps, pipeline management, satellite roof measurements, AI scheduling, and everything you need to run your roofing business — at a fraction of what you're paying now.</p>
+    <div class="hero-price">
+      Competitors charge <s>$300-500/mo</s><br>
+      Starting at <strong>$149/mo</strong>
+    </div>
+    <a href="#pricing" class="cta-btn">Start Your Free 14-Day Trial</a>
+    <span class="cta-sub">No credit card required. Cancel anytime.</span>
+  </div>
+</section>
+
+<!-- Trust Bar -->
+<div class="trust-bar">
+  <p>Trusted by roofing companies across the Midwest</p>
+  <div class="trust-logos">
+    <span>⭐ 5-Star Rated</span>
+    <span>🏠 50+ Roofing Companies</span>
+    <span>📱 Mobile-First</span>
+    <span>🔒 Bank-Level Security</span>
+  </div>
+</div>
+
+<!-- Problem -->
+<section class="problem">
+  <h2>Your Current CRM Is Costing You Money</h2>
+  <p>AccuLynx, JobNimbus, Roofr — they all charge premium prices for basic features. And they still make you pay extra for the tools you actually need.</p>
+  <div class="pain-points">
+    <div class="pain-point">
+      <div class="emoji">💸</div>
+      <h4>$300-500/Month</h4>
+      <p>Most roofing CRMs charge per user, per feature, per everything. It adds up fast.</p>
+    </div>
+    <div class="pain-point">
+      <div class="emoji">📏</div>
+      <h4>No Built-In Measurements</h4>
+      <p>Need roof measurements? That's another $15-35 per report from EagleView. Every single time.</p>
+    </div>
+    <div class="pain-point">
+      <div class="emoji">🌩️</div>
+      <h4>No Storm Tracking</h4>
+      <p>You're checking 3 different websites to find hail data. Your CRM should do this for you.</p>
+    </div>
+    <div class="pain-point">
+      <div class="emoji">🐌</div>
+      <h4>Slow & Clunky</h4>
+      <p>Built by tech companies, not roofers. Too many clicks to do simple things.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+  <h2>Everything You Need. <span>Nothing You Don't.</span></h2>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">📐</div>
+      <h3>Satellite Roof Measurements</h3>
+      <p>Enter any address, trace the roof on satellite imagery. Get squares, ridge, valley, hip, rake, and material estimates — instantly. No EagleView needed for initial quotes.</p>
+      <span class="tag">EXCLUSIVE</span>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🌩️</div>
+      <h3>Live Storm & Hail Tracker</h3>
+      <p>Nationwide hail map with size data from NOAA/SPC. See exactly where hail hit in the last 7, 30, or 90 days. Find leads before your competition.</p>
+      <span class="tag">EXCLUSIVE</span>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📊</div>
+      <h3>Visual Pipeline Board</h3>
+      <p>Drag-and-drop pipeline. See every lead and job from first contact to final payment. Never lose track of a deal again.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🤖</div>
+      <h3>AI Scheduling Agent</h3>
+      <p>Speed-to-lead auto-responses, drip follow-ups, and smart scheduling. Your AI assistant handles the busywork so you can focus on selling.</p>
+      <span class="tag">AI POWERED</span>
+    </div>
+    <div class="feature-card">
+      <div class="icon">💰</div>
+      <h3>Financial Tracking</h3>
+      <p>Invoices, payments, receipts, and commission tracking all in one place. Know exactly where every dollar is.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📱</div>
+      <h3>Mobile-First Design</h3>
+      <p>Built for the field. Everything works on your phone — update jobs from the roof, snap receipt photos, check your pipeline between appointments.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">👥</div>
+      <h3>Multi-User & Roles</h3>
+      <p>Admin, sales reps, office staff — everyone gets their own login with role-based access. Track who's doing what.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📅</div>
+      <h3>Calendar & Tasks</h3>
+      <p>Job calendar, task management, and reminders. Assign tasks to team members and track completion.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🎨</div>
+      <h3>Custom Branding</h3>
+      <p>Pick your company colors, upload your logo. Make it yours. 18 theme options or use your exact brand colors.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison -->
+<section class="compare">
+  <h2>The Honest Comparison</h2>
+  <table class="compare-table">
+    <tr>
+      <th>Feature</th>
+      <th>Trustman CRM</th>
+      <th>AccuLynx</th>
+    </tr>
+    <tr><td>Pipeline Management</td><td class="check">✅</td><td class="check">✅</td></tr>
+    <tr><td>Hail & Storm Maps</td><td class="check">✅</td><td class="cross">❌</td></tr>
+    <tr><td>Satellite Roof Measurements</td><td class="check">✅</td><td class="cross">❌</td></tr>
+    <tr><td>AI Scheduling Agent</td><td class="check">✅</td><td class="cross">❌</td></tr>
+    <tr><td>Commission Tracking</td><td class="check">✅</td><td class="check">✅</td></tr>
+    <tr><td>Mobile Friendly</td><td class="check">✅</td><td class="check">⚠️</td></tr>
+    <tr><td>Custom Branding</td><td class="check">✅</td><td class="cross">❌</td></tr>
+    <tr><td>Financial Dashboard</td><td class="check">✅</td><td class="check">✅</td></tr>
+    <tr><td>Unlimited Users</td><td class="check">✅</td><td class="cross">Per seat 💸</td></tr>
+    <tr><td><strong>Monthly Price</strong></td><td class="check"><strong>$149-349</strong></td><td class="cross"><strong>$300-500+</strong></td></tr>
+  </table>
+</section>
+
+<!-- Social Proof -->
+<section class="social-proof">
+  <p class="quote">"I was paying $450/month for AccuLynx and half the features I never used. Switched to Trustman CRM and I'm saving $200/month while actually doing MORE with it. The hail maps alone are worth it."</p>
+  <p class="quote-author">— Roofing contractor, St. Louis MO</p>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <h2>Simple, Honest Pricing</h2>
+  <p class="sub">No per-seat fees. No hidden charges. No contracts.</p>
+  <div class="price-cards">
+    <div class="price-card basic">
+      <h3>Starter</h3>
+      <p style="color:#888;font-size:13px">For small crews getting started</p>
+      <div class="price">$149<span>/mo</span></div>
+      <ul>
+        <li>Pipeline & Job Management</li>
+        <li>Calendar & Tasks</li>
+        <li>Contact Management</li>
+        <li>Financial Tracking</li>
+        <li>Mobile Optimized</li>
+        <li>Up to 3 Users</li>
+      </ul>
+      <a href="mailto:info@trustmanai.com?subject=Trustman CRM - Starter Trial&body=I'd like to start my free 14-day trial of Trustman CRM (Starter plan).%0A%0ACompany:%0AName:%0APhone:%0AHow many employees:" class="card-cta">Start Free Trial →</a>
+    </div>
+    <div class="price-card popular">
+      <h3>Professional</h3>
+      <p style="color:#888;font-size:13px">For growing roofing companies</p>
+      <div class="price">$249<span>/mo</span></div>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>🌩️ Hail & Storm Tracker</li>
+        <li>📐 Satellite Roof Measurements</li>
+        <li>Commission Tracking</li>
+        <li>Custom Branding</li>
+        <li>Unlimited Users</li>
+      </ul>
+      <a href="mailto:info@trustmanai.com?subject=Trustman CRM - Pro Trial&body=I'd like to start my free 14-day trial of Trustman CRM (Professional plan).%0A%0ACompany:%0AName:%0APhone:%0AHow many employees:" class="card-cta">Start Free Trial →</a>
+    </div>
+    <div class="price-card">
+      <h3>Enterprise</h3>
+      <p style="color:#888;font-size:13px">For multi-location operations</p>
+      <div class="price">$349<span>/mo</span></div>
+      <ul>
+        <li>Everything in Professional</li>
+        <li>🤖 AI Scheduling Agent</li>
+        <li>Priority Support</li>
+        <li>Custom Integrations</li>
+        <li>Dedicated Onboarding</li>
+        <li>Unlimited Everything</li>
+      </ul>
+      <a href="mailto:info@trustmanai.com?subject=Trustman CRM - Enterprise Trial&body=I'd like to start my free 14-day trial of Trustman CRM (Enterprise plan).%0A%0ACompany:%0AName:%0APhone:%0AHow many employees:" class="card-cta">Start Free Trial →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Bottom CTA -->
+<section class="bottom-cta">
+  <h2>Ready to Switch?</h2>
+  <p>Join roofing companies saving thousands per year. Start your free trial today.</p>
+  <a href="#pricing" class="cta-btn">Start Your Free 14-Day Trial</a>
+  <span class="cta-sub">No credit card. No contracts. No BS.</span>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p>&copy; 2026 Trustman CRM — Built by <a href="https://trustmanai.com">Trustman AI</a></p>
+  <p style="margin-top:8px"><a href="mailto:info@trustmanai.com">info@trustmanai.com</a> · <a href="tel:6365417005">(636) 541-7005</a></p>
+</footer>
+
+</body>
+</html>
