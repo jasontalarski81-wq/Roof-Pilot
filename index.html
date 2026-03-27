@@ -252,16 +252,7 @@ section{padding:70px 16px}
 </head>
 <body>
 
-<script>
-window.addEventListener('load', function() {
-  window.scrollTo(0, 0);
-});
-window.addEventListener('DOMContentLoaded', function() {
-  window.scrollTo(0, 0);
-});
-// Also force scroll to top immediately
-window.scrollTo(0, 0);
-</script>
+
 
 
 <!-- Cursor Glow -->
@@ -635,164 +626,45 @@ window.scrollTo(0, 0);
 </div>
 </footer>
 
-<script>
-// Cursor glow
-const glow=document.getElementById('cursor-glow');
-let mx=0,my=0,gx=0,gy=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY});
-(function animGlow(){gx+=(mx-gx)*0.15;gy+=(my-gy)*0.15;glow.style.left=gx+'px';glow.style.top=gy+'px';requestAnimationFrame(animGlow)})();
 
-// Particles
-(function initParticles(){
-const c=document.getElementById('particles');
-const colors=['var(--orange)','var(--cyan)','rgba(255,255,255,0.3)'];
-for(let i=0;i<40;i++){
-const p=document.createElement('div');
-p.className='particle';
-const s=Math.random()*3+1;
-p.style.cssText=`width:${s}px;height:${s}px;left:${Math.random()*100}%;background:${colors[i%3]};animation-duration:${Math.random()*15+10}s;animation-delay:${Math.random()*10}s`;
-c.appendChild(p);
-}
-})();
 
-// Typing effect
-(function typeEffect(){
-const el=document.getElementById('typed-text');
-const cur=document.getElementById('cursor');
-const phrases=['TAKE CONTROL.','SAVE THOUSANDS.','WORK SMARTER.','TAKE CONTROL.'];
-let pi=0,ci=0,deleting=false;
-function tick(){
-const phrase=phrases[pi];
-if(!deleting){
-el.textContent=phrase.substring(0,ci+1);
-ci++;
-if(ci===phrase.length){
-setTimeout(()=>{deleting=true;tick()},2000);
-return;
-}
-setTimeout(tick,80+Math.random()*40);
-}else{
-el.textContent=phrase.substring(0,ci-1);
-ci--;
-if(ci===0){
-deleting=false;
-pi=(pi+1)%phrases.length;
-setTimeout(tick,500);
-return;
-}
-setTimeout(tick,40);
-}
-}
-setTimeout(tick,1000);
-})();
 
-// Scroll reveal
-const obs=new IntersectionObserver((entries)=>{
-entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
-},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});
-document.querySelectorAll('.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(el=>obs.observe(el));
 
-// Counter animation
-const cObs=new IntersectionObserver((entries)=>{
-entries.forEach(e=>{
-if(e.isIntersecting){
-const el=e.target;
-const target=parseInt(el.dataset.target);
-const prefix=el.dataset.prefix||'';
-const suffix=el.dataset.suffix||'';
-let current=0;
-const step=target/40;
-const timer=setInterval(()=>{
-current+=step;
-if(current>=target){current=target;clearInterval(timer)}
-el.textContent=prefix+Math.round(current)+suffix;
-},30);
-cObs.unobserve(el);
-}
-});
-},{threshold:0.5});
-document.querySelectorAll('.stat-number[data-target]').forEach(el=>cObs.observe(el));
-
-// Nav scroll
-let lastScroll=0;
-window.addEventListener('scroll',()=>{
-const nav=document.querySelector('nav');
-const st=window.scrollY;
-if(st>100){nav.style.background='rgba(10,10,15,0.95)';nav.style.borderBottomColor='rgba(255,255,255,0.06)'}
-else{nav.style.background='rgba(10,10,15,0.8)';nav.style.borderBottomColor='rgba(255,255,255,0.08)'}
-lastScroll=st;
-});
-
-// Close mobile nav on link click
-document.querySelectorAll('#navLinks a').forEach(a=>{
-a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open'));
-});
-</script>
-<script>
-document.querySelector('.mobile-menu').addEventListener('click', function() {
-  document.getElementById('nav').classList.toggle('mobile-nav-open');
-});
-document.querySelectorAll('.nav-links a').forEach(function(a) {
-  a.addEventListener('click', function() {
-    document.getElementById('nav').classList.remove('mobile-nav-open');
-  });
-});
-</script>
 
 <script>
+// Scroll to top
+window.scrollTo(0,0);
+window.addEventListener('load',function(){window.scrollTo(0,0)});
+
+// Mobile menu toggle
 (function(){
-  var btn = document.querySelector('.mobile-menu');
-  var links = document.getElementById('navLinks');
-  var isOpen = false;
-  if(btn && links) {
-    // On desktop, show nav-links
-    function checkWidth() {
-      if(window.innerWidth > 768) {
-        links.style.display = 'flex';
-      } else {
-        links.style.display = isOpen ? 'flex' : 'none';
-        if(isOpen) {
-          links.style.position = 'fixed';
-          links.style.top = '60px';
-          links.style.left = '0';
-          links.style.right = '0';
-          links.style.bottom = '0';
-          links.style.background = 'rgba(10,10,15,0.97)';
-          links.style.backdropFilter = 'blur(20px)';
-          links.style.flexDirection = 'column';
-          links.style.padding = '40px 24px';
-          links.style.gap = '20px';
-          links.style.zIndex = '999';
-          links.style.textAlign = 'center';
-          links.style.alignItems = 'center';
-        } else {
-          links.style.position = '';
-          links.style.top = '';
-          links.style.left = '';
-          links.style.right = '';
-          links.style.bottom = '';
-          links.style.background = '';
-          links.style.flexDirection = '';
-          links.style.padding = '';
-          links.style.gap = '';
-          links.style.zIndex = '';
-          links.style.textAlign = '';
-          links.style.alignItems = '';
-        }
-      }
+  var btn=document.querySelector('.mobile-menu');
+  var nav=document.getElementById('navLinks');
+  if(!btn||!nav)return;
+  var open=false;
+  function update(){
+    if(window.innerWidth>768){
+      nav.style.cssText='display:flex';
+      return;
     }
-    btn.addEventListener('click', function(){
-      isOpen = !isOpen;
-      checkWidth();
-    });
-    links.querySelectorAll('a').forEach(function(a){
-      a.addEventListener('click', function(){ isOpen = false; checkWidth(); });
-    });
-    window.addEventListener('resize', function(){ checkWidth(); });
-    checkWidth();
+    if(open){
+      nav.style.cssText='display:flex;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(20px);flex-direction:column;padding:40px 24px;gap:20px;z-index:999;text-align:center;align-items:center';
+    }else{
+      nav.style.cssText='display:none';
+    }
   }
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    open=!open;
+    update();
+  });
+  nav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){open=false;update()});
+  });
+  window.addEventListener('resize',update);
+  update();
 })();
 </script>
-
 </body>
 </html>
