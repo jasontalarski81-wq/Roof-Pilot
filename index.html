@@ -4,718 +4,535 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RoofPilot — Take Control.</title>
-<meta name="description" content="RoofPilot — the futuristic roofing management platform. Built by a roofer, for roofers. Starting at $149/mo.">
-<link rel="icon" type="image/png" href="logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@700;800;900:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="RoofPilot — the all-in-one roofing platform built by a roofer. Job pipeline, satellite measurements, hail maps, invoicing & more. Starting at $149/mo.">
+<link rel="icon" href="logo.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0a0a0f;--bg2:#0d0d14;--orange:#fb923c;--cyan:#06b6d4;--green:#22c55e;--red:#ef4444;--white:#f0f0f5;--gray:#8a8a9a;--glass:rgba(255,255,255,0.04);--glass-border:rgba(255,255,255,0.08);--glow-orange:0 0 30px rgba(251,146,60,0.3);--glow-cyan:0 0 30px rgba(6,182,212,0.3)}
-html{scroll-behavior:smooth;scroll-restoration:manual;scrollbar-width:thin;scrollbar-color:var(--orange) var(--bg)}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden;cursor:default;line-height:1.6}
-h1,h2,h3,h4,h5,h6{font-family:'Space Grotesk',sans-serif;font-weight:700}
+:root{--bg:#0a0a0f;--orange:#fb923c;--cyan:#06b6d4;--card:rgba(255,255,255,0.04);--card-border:rgba(255,255,255,0.08);--text:#e2e8f0;--text-dim:#94a3b8;--green:#22c55e;--red:#ef4444;--font-heading:'Space Grotesk',sans-serif;--font-body:'Inter',sans-serif}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);overflow-x:hidden;line-height:1.6}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
 
-/* Scanline Overlay */
-body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);opacity:0.4}
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;background:rgba(10,10,15,0.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--card-border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{display:flex;align-items:center;gap:.6rem}
+.nav-logo img{height:32px;width:32px}
+.nav-logo span{font-family:var(--font-heading);font-weight:700;font-size:1.2rem;color:#fff}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{font-size:.9rem;color:var(--text-dim);transition:color .3s}
+.nav-links a:hover{color:var(--orange)}
+.nav-cta{background:linear-gradient(135deg,var(--orange),#f97316);color:#000;font-weight:600;padding:.5rem 1.2rem;border-radius:8px;font-size:.85rem;transition:transform .2s,box-shadow .2s}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(251,146,60,0.4)}
+.hamburger{display:none;background:none;border:none;color:#fff;font-size:1.6rem;cursor:pointer}
 
-/* Custom Cursor Glow */
-#cursor-glow{position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(251,146,60,0.07) 0%,transparent 70%);pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:opacity 0.3s}
-
-/* Particles */
-#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
-.particle{position:absolute;border-radius:50%;animation:floatParticle linear infinite;opacity:0}
-@keyframes floatParticle{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
-
-/* Grid Background */
-.grid-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(6,182,212,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(6,182,212,0.03) 1px,transparent 1px);background-size:60px 60px}
-
-/* Section base */
-section{position:relative;z-index:1;padding:100px 20px}
-.container{max-width:1200px;margin:0 auto;position:relative}
-
-/* Scroll animations */
-.reveal{opacity:0;transform:translateY(40px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
-.reveal-left{opacity:0;transform:translateX(-60px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
-.reveal-left.visible{opacity:1;transform:translateX(0)}
-.reveal-right{opacity:0;transform:translateX(60px);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
-.reveal-right.visible{opacity:1;transform:translateX(0)}
-.reveal-scale{opacity:0;transform:scale(0.85);transition:all 0.8s cubic-bezier(0.16,1,0.3,1)}
-.reveal-scale.visible{opacity:1;transform:scale(1)}
-
-/* Nav */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;backdrop-filter:blur(20px);background:rgba(10,10,15,0.8);border-bottom:1px solid var(--glass-border);transition:all 0.3s}
-nav .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
-nav .logo-area{display:flex;align-items:center;gap:10px}
-nav .logo-area img{width:36px;height:36px;border-radius:8px}
-nav .logo-area span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.2rem;background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-nav .nav-links{display:flex;gap:28px;align-items:center}
-nav .nav-links a{color:var(--gray);text-decoration:none;font-size:0.9rem;transition:color 0.3s;font-weight:500}
-nav .nav-links a:hover{color:var(--white)}
-.nav-cta{padding:8px 20px;border-radius:8px;background:linear-gradient(135deg,var(--orange),#e87c2a);color:#000!important;font-weight:600!important;font-size:0.85rem!important;text-decoration:none;transition:all 0.3s;-webkit-text-fill-color:#000!important}
-.nav-cta:hover{box-shadow:var(--glow-orange);transform:translateY(-1px)}
-.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:5px}
-.hamburger span{width:24px;height:2px;background:var(--white);transition:all 0.3s}
-
-/* HERO */
-#hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding-top:80px;position:relative;overflow:hidden}
-.hero-gradient{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 20%,rgba(251,146,60,0.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(6,182,212,0.08) 0%,transparent 50%);animation:heroShift 8s ease-in-out infinite alternate}
-@keyframes heroShift{0%{background:radial-gradient(ellipse at 30% 20%,rgba(251,146,60,0.08) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(6,182,212,0.08) 0%,transparent 50%)}100%{background:radial-gradient(ellipse at 60% 70%,rgba(251,146,60,0.08) 0%,transparent 50%),radial-gradient(ellipse at 30% 30%,rgba(6,182,212,0.08) 0%,transparent 50%)}}
-
-/* Radar animation */
-.radar{position:absolute;top:50%;left:50%;width:500px;height:500px;transform:translate(-50%,-50%);opacity:0.06;pointer-events:none}
-.radar-circle{position:absolute;border:1px solid var(--cyan);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%)}
-.radar-circle:nth-child(1){width:200px;height:200px}
-.radar-circle:nth-child(2){width:350px;height:350px}
-.radar-circle:nth-child(3){width:500px;height:500px}
-.radar-sweep{position:absolute;top:50%;left:50%;width:250px;height:2px;transform-origin:left center;background:linear-gradient(90deg,var(--cyan),transparent);animation:radarSweep 4s linear infinite}
-@keyframes radarSweep{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-
-.hero-content{position:relative;z-index:2}
-.hero-badge{display:inline-block;padding:8px 20px;border-radius:100px;border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(10px);font-size:0.85rem;color:var(--cyan);margin-bottom:30px;letter-spacing:1px;text-transform:uppercase}
-.hero-badge .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:8px;animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
-
-.hero-title{font-size:clamp(3rem,8vw,6.5rem);line-height:1;margin-bottom:24px;position:relative}
-.hero-title .line1{display:block;color:var(--white);opacity:0.9}
-.hero-title .line2{display:block;background:linear-gradient(135deg,var(--orange),#f97316,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;position:relative}
-.hero-title .line2::after{content:'';position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--cyan));animation:expandLine 1.5s 2s forwards}
-@keyframes expandLine{to{width:100%}}
-
-.typing-cursor{display:inline-block;width:3px;height:1em;background:var(--orange);margin-left:4px;animation:blink 0.8s step-end infinite;vertical-align:text-bottom}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-.hero-sub{font-size:1.15rem;color:var(--gray);max-width:600px;margin:0 auto 40px;line-height:1.7}
-
-.hero-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-bottom:60px}
-.btn-primary{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border-radius:12px;background:linear-gradient(135deg,var(--orange),#e87c2a);color:#000;font-weight:700;font-size:1rem;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden;border:none;cursor:pointer;font-family:'Space Grotesk',sans-serif}
-.btn-primary::before{content:'';position:absolute;top:50%;left:50%;width:0;height:0;border-radius:50%;background:rgba(255,255,255,0.2);transition:all 0.5s;transform:translate(-50%,-50%)}
-.btn-primary:hover::before{width:300px;height:300px}
-.btn-primary:hover{box-shadow:0 0 40px rgba(251,146,60,0.5),0 0 80px rgba(251,146,60,0.2);transform:translateY(-2px)}
-.btn-secondary{display:inline-flex;align-items:center;gap:8px;padding:16px 36px;border-radius:12px;border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(10px);color:var(--white);font-weight:600;font-size:1rem;text-decoration:none;transition:all 0.3s;cursor:pointer;font-family:'Space Grotesk',sans-serif}
-.btn-secondary:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan);transform:translateY(-2px)}
-
-/* Animated pulse ring on primary button */
-.btn-primary-wrap{position:relative;display:inline-block}
-.pulse-ring{position:absolute;top:50%;left:50%;width:100%;height:100%;border:2px solid var(--orange);border-radius:12px;transform:translate(-50%,-50%);animation:pulseRing 2s ease-out infinite;pointer-events:none}
-@keyframes pulseRing{0%{transform:translate(-50%,-50%) scale(1);opacity:0.6}100%{transform:translate(-50%,-50%) scale(1.3);opacity:0}}
-
-/* Stats Bar */
-.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:700px;margin:0 auto}
-.stat-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:16px;padding:24px;text-align:center;transition:all 0.4s}
-.stat-card:hover{border-color:rgba(251,146,60,0.3);box-shadow:var(--glow-orange);transform:translateY(-4px)}
-.stat-number{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-label{font-size:0.8rem;color:var(--gray);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
-
-/* PROBLEM */
-#problem{background:linear-gradient(180deg,transparent 0%,rgba(239,68,68,0.02) 50%,transparent 100%)}
-.section-label{display:inline-flex;align-items:center;gap:8px;font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;color:var(--cyan);margin-bottom:16px;font-weight:600}
-.section-label::before{content:'';width:30px;height:1px;background:var(--cyan)}
-.section-title{font-size:clamp(2rem,5vw,3.2rem);margin-bottom:20px;line-height:1.15}
-.section-desc{font-size:1.05rem;color:var(--gray);max-width:600px;line-height:1.7;margin-bottom:50px}
-
-.price-battle{display:grid;grid-template-columns:1fr auto 1fr;gap:30px;align-items:center;max-width:800px;margin:0 auto}
-.price-card-old{background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:20px;padding:40px;text-align:center;position:relative;overflow:hidden}
-.price-card-old::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(239,68,68,0.02) 10px,rgba(239,68,68,0.02) 20px)}
-.price-card-old .brand{font-size:0.9rem;color:var(--red);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;font-weight:600}
-.price-card-old .price{font-family:'Space Grotesk',sans-serif;font-size:3.5rem;font-weight:700;color:var(--red);position:relative;display:inline-block}
-.price-card-old .price::after{content:'';position:absolute;top:50%;left:-10%;width:120%;height:3px;background:var(--red);transform:rotate(-8deg)}
-.price-card-old .per{color:var(--gray);font-size:0.9rem}
-
-.vs-circle{width:60px;height:60px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:0.85rem;color:var(--gray);flex-shrink:0;backdrop-filter:blur(10px)}
-
-.price-card-new{background:rgba(34,197,94,0.05);border:1px solid rgba(34,197,94,0.2);border-radius:20px;padding:40px;text-align:center;position:relative;box-shadow:0 0 40px rgba(34,197,94,0.05)}
-.price-card-new .brand{font-size:0.9rem;color:var(--green);text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;font-weight:600}
-.price-card-new .price{font-family:'Space Grotesk',sans-serif;font-size:3.5rem;font-weight:700;color:var(--green)}
-.price-card-new .per{color:var(--gray);font-size:0.9rem}
-.price-card-new .save{display:inline-block;margin-top:12px;padding:6px 16px;border-radius:100px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:var(--green);font-size:0.8rem;font-weight:600}
-
-.problem-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:50px}
-.problem-feat{display:flex;align-items:center;gap:12px;padding:16px 20px;border-radius:12px;background:var(--glass);border:1px solid var(--glass-border);font-size:0.95rem;color:var(--gray)}
-.problem-feat .check{color:var(--green);font-size:1.2rem;flex-shrink:0}
-
-/* FEATURES */
-#features{background:linear-gradient(180deg,transparent,rgba(6,182,212,0.02),transparent)}
-.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
-.feature-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:20px;padding:32px 24px;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;transform-style:preserve-3d;perspective:800px}
-.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:0;transition:opacity 0.4s}
-.feature-card:hover::before{opacity:1}
-.feature-card:hover{border-color:rgba(6,182,212,0.3);box-shadow:0 0 30px rgba(6,182,212,0.1),0 20px 40px rgba(0,0,0,0.3);transform:translateY(-8px) rotateX(2deg)}
-.feature-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,rgba(6,182,212,0.15),rgba(251,146,60,0.15));display:flex;align-items:center;justify-content:center;font-size:1.5rem;margin-bottom:16px}
-.feature-card h3{font-size:1.05rem;margin-bottom:8px;color:var(--white)}
-.feature-card p{font-size:0.85rem;color:var(--gray);line-height:1.6}
-
-/* PRICING */
-#pricing{background:linear-gradient(180deg,transparent,rgba(251,146,60,0.02),transparent)}
-.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:start}
-.pricing-card{background:var(--glass);backdrop-filter:blur(20px);border:1px solid var(--glass-border);border-radius:24px;padding:40px 32px;transition:all 0.4s;position:relative;overflow:hidden}
-.pricing-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(0,0,0,0.3)}
-.pricing-card.popular{border-color:rgba(251,146,60,0.4);box-shadow:0 0 40px rgba(251,146,60,0.1)}
-.pricing-card.popular::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--orange),var(--cyan))}
-.popular-badge{position:absolute;top:16px;right:16px;padding:5px 14px;border-radius:100px;background:linear-gradient(135deg,var(--orange),#e87c2a);color:#000;font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;animation:badgeGlow 2s ease-in-out infinite}
-@keyframes badgeGlow{0%,100%{box-shadow:0 0 10px rgba(251,146,60,0.3)}50%{box-shadow:0 0 25px rgba(251,146,60,0.6)}}
-.pricing-tier{font-size:0.85rem;text-transform:uppercase;letter-spacing:2px;color:var(--gray);margin-bottom:8px;font-weight:600}
-.pricing-price{font-family:'Space Grotesk',sans-serif;font-size:3rem;font-weight:700;margin-bottom:4px}
-.pricing-card.popular .pricing-price{background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.pricing-period{color:var(--gray);font-size:0.85rem;margin-bottom:6px}
-.pricing-users{color:var(--cyan);font-size:0.8rem;margin-bottom:24px;font-weight:500}
-.pricing-features{list-style:none;margin-bottom:32px}
-.pricing-features li{padding:8px 0;display:flex;align-items:center;gap:10px;font-size:0.9rem;color:var(--gray);border-bottom:1px solid rgba(255,255,255,0.03)}
-.pricing-features li:last-child{border:none}
-.pricing-features .check{color:var(--green);font-weight:700;flex-shrink:0}
-.pricing-btn{display:block;width:100%;padding:14px;border-radius:12px;text-align:center;font-weight:700;font-size:0.95rem;text-decoration:none;transition:all 0.3s;font-family:'Space Grotesk',sans-serif;border:none;cursor:pointer}
-.pricing-btn-outline{background:transparent;border:1px solid var(--glass-border);color:var(--white)}
-.pricing-btn-outline:hover{border-color:var(--cyan);box-shadow:var(--glow-cyan)}
-.pricing-btn-fill{background:linear-gradient(135deg,var(--orange),#e87c2a);color:#000}
-.pricing-btn-fill:hover{box-shadow:0 0 40px rgba(251,146,60,0.4);transform:translateY(-2px)}
-.pricing-trial{text-align:center;font-size:0.8rem;color:var(--gray);margin-top:16px}
-
-/* COMPARISON */
-#comparison{overflow:hidden}
-.comp-table-wrap{overflow-x:auto;border-radius:20px;border:1px solid var(--glass-border);background:var(--glass);backdrop-filter:blur(20px)}
-.comp-table{width:100%;border-collapse:collapse;min-width:600px}
-.comp-table th,.comp-table td{padding:16px 20px;text-align:center;font-size:0.9rem;border-bottom:1px solid var(--glass-border)}
-.comp-table th{background:rgba(255,255,255,0.02);color:var(--gray);text-transform:uppercase;letter-spacing:1px;font-size:0.75rem;font-weight:600}
-.comp-table th:first-child,.comp-table td:first-child{text-align:left;font-weight:500}
-.comp-table th.highlight{color:var(--orange);position:relative}
-.comp-table th.highlight::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--orange)}
-.comp-table td.highlight{background:rgba(251,146,60,0.03)}
-.comp-table tr:last-child td{border-bottom:none}
-.comp-table .yes{color:var(--green);font-weight:700;font-size:1.1rem}
-.comp-table .no{color:rgba(255,255,255,0.15);font-size:1.1rem}
-.comp-table .price-cell{font-family:'Space Grotesk',sans-serif;font-weight:700}
-.comp-table .price-cell.good{color:var(--green)}
-.comp-table .price-cell.bad{color:var(--red)}
-
-/* FOUNDER */
-#founder{background:linear-gradient(180deg,transparent,rgba(251,146,60,0.02),transparent)}
-.founder-grid{display:grid;grid-template-columns:auto 1fr;gap:50px;align-items:center}
-.founder-avatar{width:200px;height:200px;border-radius:24px;background:linear-gradient(135deg,rgba(251,146,60,0.15),rgba(6,182,212,0.15));display:flex;align-items:center;justify-content:center;font-size:4rem;border:1px solid var(--glass-border);position:relative;overflow:hidden;backdrop-filter:blur(10px)}
-.founder-avatar::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.05),transparent);animation:shimmer 3s ease-in-out infinite}
-@keyframes shimmer{0%{left:-100%}100%{left:100%}}
-.founder-quote{font-size:1.5rem;line-height:1.5;font-style:italic;color:var(--white);margin-bottom:20px;font-family:'Space Grotesk',sans-serif;font-weight:300}
-.founder-quote span{background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600;font-style:normal}
-.founder-name{font-weight:700;font-size:1.1rem;margin-bottom:4px}
-.founder-role{color:var(--gray);font-size:0.9rem;margin-bottom:16px}
-.founder-text{color:var(--gray);font-size:0.95rem;line-height:1.7;max-width:600px}
-
-/* CTA */
-#cta{text-align:center;padding:120px 20px}
-.cta-title{font-size:clamp(2.5rem,6vw,4.5rem);margin-bottom:16px;line-height:1.1}
-.cta-title span{background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.cta-sub{color:var(--gray);font-size:1.1rem;margin-bottom:40px;max-width:500px;margin-left:auto;margin-right:auto}
-.cta-btn{display:inline-flex;align-items:center;gap:10px;padding:20px 50px;border-radius:16px;background:linear-gradient(135deg,var(--orange),#e87c2a);color:#000;font-weight:700;font-size:1.2rem;text-decoration:none;transition:all 0.3s;position:relative;font-family:'Space Grotesk',sans-serif;border:none;cursor:pointer}
-.cta-btn:hover{box-shadow:0 0 60px rgba(251,146,60,0.5),0 0 120px rgba(251,146,60,0.2);transform:translateY(-3px) scale(1.02)}
-.cta-trust{display:flex;gap:30px;justify-content:center;margin-top:30px;flex-wrap:wrap}
-.cta-trust span{color:var(--gray);font-size:0.85rem;display:flex;align-items:center;gap:6px}
-
-/* Footer */
-footer{border-top:1px solid var(--glass-border);padding:50px 20px;position:relative;z-index:1}
-.footer-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px}
-.footer-brand{display:flex;flex-direction:column;gap:12px}
-.footer-brand .logo-area{display:flex;align-items:center;gap:10px}
-.footer-brand .logo-area img{width:32px;height:32px;border-radius:8px}
-.footer-brand .logo-area span{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;background:linear-gradient(135deg,var(--orange),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.footer-brand p{color:var(--gray);font-size:0.85rem;max-width:280px;line-height:1.6}
-.footer-col h4{font-size:0.8rem;text-transform:uppercase;letter-spacing:2px;color:var(--gray);margin-bottom:16px}
-.footer-col a{display:block;color:var(--gray);text-decoration:none;font-size:0.9rem;padding:4px 0;transition:color 0.3s}
-.footer-col a:hover{color:var(--white)}
-.footer-bottom{max-width:1200px;margin:30px auto 0;padding-top:20px;border-top:1px solid var(--glass-border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.footer-bottom p{color:var(--gray);font-size:0.8rem}
-
-/* Responsive */
-@media(max-width:1024px){
-.features-grid{grid-template-columns:repeat(2,1fr)}
-.pricing-grid{grid-template-columns:1fr}
-.pricing-card.popular{order:-1}
-}
 @media(max-width:768px){
-.nav-links{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:rgba(10,10,15,0.95);backdrop-filter:blur(20px);padding:20px;gap:16px;border-bottom:1px solid var(--glass-border)}
-.nav-links.open{display:flex}
-.hamburger{display:flex}
-.stats-bar{grid-template-columns:1fr}
-.price-battle{grid-template-columns:1fr;text-align:center}
-.vs-circle{margin:0 auto}
-.features-grid{grid-template-columns:1fr}
-.founder-grid{grid-template-columns:1fr;text-align:center}
-.founder-avatar{margin:0 auto}
-.founder-text{margin:0 auto}
-.footer-grid{grid-template-columns:1fr 1fr}
-.comp-table-wrap{margin:0 -20px;border-radius:0}
+  .nav-links{display:none;position:absolute;top:64px;left:0;width:100%;background:rgba(10,10,15,0.97);flex-direction:column;padding:1.5rem 2rem;gap:1.2rem;border-bottom:1px solid var(--card-border)}
+  .nav-links.open{display:flex}
+  .hamburger{display:block}
 }
-@media(max-width:480px){
-section{padding:70px 16px}
-.footer-grid{grid-template-columns:1fr}
-.hero-title{font-size:2.5rem}
+
+/* ── PARTICLES ── */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;opacity:0;animation:floatUp linear infinite}
+@keyframes floatUp{0%{opacity:0;transform:translateY(100vh) scale(0)}10%{opacity:1}90%{opacity:1}100%{opacity:0;transform:translateY(-10vh) scale(1)}}
+
+/* ── HERO ── */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden}
+.hero-bg{position:absolute;inset:0;z-index:0}
+.hero-bg::before{content:'';position:absolute;width:600px;height:600px;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(6,182,212,0.08) 0%,transparent 70%)}
+.radar{position:absolute;top:50%;left:50%;width:400px;height:400px;transform:translate(-50%,-50%)}
+.radar-circle{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(6,182,212,0.1)}
+.radar-circle:nth-child(2){inset:15%}
+.radar-circle:nth-child(3){inset:30%}
+.radar-sweep{position:absolute;top:50%;left:50%;width:50%;height:2px;transform-origin:left center;background:linear-gradient(90deg,rgba(6,182,212,0.6),transparent);animation:sweep 4s linear infinite}
+@keyframes sweep{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-title{font-family:var(--font-heading);font-size:clamp(3rem,8vw,6rem);font-weight:700;letter-spacing:-.02em;background:linear-gradient(135deg,#fff 0%,var(--cyan) 50%,var(--orange) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:1rem}
+.typing-wrapper{height:2.5rem;margin-bottom:2rem}
+.typing-text{font-family:var(--font-heading);font-size:clamp(1.2rem,3vw,1.8rem);color:var(--orange);font-weight:600}
+.typing-text .cursor{display:inline-block;width:2px;height:1.2em;background:var(--orange);margin-left:4px;vertical-align:text-bottom;animation:blink .7s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.hero-sub{font-size:1.1rem;color:var(--text-dim);max-width:560px;margin:0 auto 2.5rem;line-height:1.7}
+.btn-primary{display:inline-block;background:linear-gradient(135deg,var(--orange),#f97316);color:#000;font-weight:700;font-size:1.05rem;padding:.9rem 2.4rem;border-radius:12px;transition:transform .2s,box-shadow .2s;cursor:pointer;border:none;font-family:var(--font-body)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(251,146,60,0.45)}
+.btn-outline{display:inline-block;border:1px solid var(--cyan);color:var(--cyan);font-weight:600;font-size:1rem;padding:.8rem 2rem;border-radius:12px;margin-left:1rem;transition:all .3s}
+.btn-outline:hover{background:rgba(6,182,212,0.1);box-shadow:0 0 20px rgba(6,182,212,0.2)}
+.hero-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+
+/* ── SECTIONS ── */
+section{position:relative;z-index:1;padding:6rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.section-label{font-size:.8rem;text-transform:uppercase;letter-spacing:3px;color:var(--cyan);font-weight:600;margin-bottom:.5rem}
+.section-title{font-family:var(--font-heading);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;color:#fff;margin-bottom:1rem}
+.section-sub{color:var(--text-dim);max-width:600px;margin-bottom:3rem;font-size:1.05rem}
+.text-center{text-align:center}
+.mx-auto{margin-left:auto;margin-right:auto}
+
+/* ── PROBLEM ── */
+.problem-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;max-width:800px;margin:0 auto}
+@media(max-width:600px){.problem-grid{grid-template-columns:1fr}}
+.problem-card{border-radius:16px;padding:2.5rem;text-align:center;border:1px solid var(--card-border);backdrop-filter:blur(12px)}
+.problem-card.competitor{background:rgba(239,68,68,0.05);border-color:rgba(239,68,68,0.2)}
+.problem-card.roofpilot{background:rgba(34,197,94,0.05);border-color:rgba(34,197,94,0.2)}
+.problem-price{font-family:var(--font-heading);font-size:2.8rem;font-weight:700;margin:.5rem 0}
+.competitor .problem-price{color:var(--red)}
+.roofpilot .problem-price{color:var(--green)}
+.problem-card h3{font-size:1.1rem;color:var(--text-dim);margin-bottom:.5rem}
+.problem-card p{color:var(--text-dim);font-size:.9rem;margin-top:.5rem}
+
+/* ── FEATURES ── */
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+.feature-card{background:var(--card);border:1px solid var(--card-border);border-radius:16px;padding:2rem;backdrop-filter:blur(12px);transition:transform .3s,border-color .3s,box-shadow .3s}
+.feature-card:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 8px 32px rgba(6,182,212,0.1)}
+.feature-icon{font-size:2rem;margin-bottom:1rem;display:block}
+.feature-card h3{font-family:var(--font-heading);font-size:1.1rem;font-weight:600;color:#fff;margin-bottom:.5rem}
+.feature-card p{color:var(--text-dim);font-size:.9rem;line-height:1.6}
+
+/* ── PRICING ── */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:960px;margin:0 auto}
+.pricing-card{background:var(--card);border:1px solid var(--card-border);border-radius:20px;padding:2.5rem 2rem;backdrop-filter:blur(12px);text-align:center;transition:transform .3s,box-shadow .3s;position:relative}
+.pricing-card.popular{border-color:var(--orange);background:rgba(251,146,60,0.04)}
+.pricing-card.popular::before{content:'Most Popular';position:absolute;top:-14px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--orange),#f97316);color:#000;font-weight:700;font-size:.75rem;padding:.35rem 1.2rem;border-radius:20px;white-space:nowrap}
+.pricing-card:hover{transform:translateY(-4px);box-shadow:0 8px 32px rgba(251,146,60,0.08)}
+.pricing-tier{font-family:var(--font-heading);font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:.5rem}
+.pricing-price{font-family:var(--font-heading);font-size:3rem;font-weight:700;color:#fff;margin:.5rem 0}
+.pricing-price span{font-size:1rem;color:var(--text-dim);font-weight:400}
+.pricing-features{list-style:none;text-align:left;margin:1.5rem 0;display:flex;flex-direction:column;gap:.6rem}
+.pricing-features li{color:var(--text-dim);font-size:.9rem;display:flex;align-items:center;gap:.5rem}
+.pricing-features li::before{content:'✓';color:var(--green);font-weight:700;font-size:1rem;flex-shrink:0}
+.pricing-btn{display:block;width:100%;padding:.8rem;border-radius:10px;font-weight:600;font-size:.95rem;text-align:center;transition:all .3s;border:none;cursor:pointer;font-family:var(--font-body)}
+.pricing-card.popular .pricing-btn{background:linear-gradient(135deg,var(--orange),#f97316);color:#000}
+.pricing-card.popular .pricing-btn:hover{box-shadow:0 4px 20px rgba(251,146,60,0.4)}
+.pricing-card:not(.popular) .pricing-btn{background:rgba(255,255,255,0.06);color:#fff;border:1px solid var(--card-border)}
+.pricing-card:not(.popular) .pricing-btn:hover{border-color:var(--cyan);background:rgba(6,182,212,0.08)}
+.pricing-trial{color:var(--text-dim);font-size:.85rem;margin-top:1rem}
+
+/* ── COMPARISON ── */
+.comparison-table{width:100%;border-collapse:collapse;max-width:800px;margin:0 auto}
+.comparison-table th,.comparison-table td{padding:1rem 1.2rem;text-align:center;border-bottom:1px solid var(--card-border);font-size:.95rem}
+.comparison-table th{font-family:var(--font-heading);color:#fff;font-weight:600}
+.comparison-table th:first-child,.comparison-table td:first-child{text-align:left}
+.comparison-table td{color:var(--text-dim)}
+.comparison-table thead{background:rgba(255,255,255,0.03)}
+.check{color:var(--green);font-weight:700;font-size:1.1rem}
+.cross{color:var(--red);font-weight:700;font-size:1.1rem}
+@media(max-width:600px){
+  .comparison-table th,.comparison-table td{padding:.7rem .5rem;font-size:.8rem}
 }
-.brand-name{font-family:'Orbitron',sans-serif;color:#fff;letter-spacing:0.05em}
+
+/* ── FOUNDER ── */
+.founder-section{display:flex;align-items:center;gap:3rem;max-width:800px;margin:0 auto}
+.founder-img{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--cyan));display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:3rem}
+.founder-text h3{font-family:var(--font-heading);font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:.3rem}
+.founder-text .founder-role{color:var(--orange);font-size:.9rem;font-weight:500;margin-bottom:1rem}
+.founder-text p{color:var(--text-dim);line-height:1.8;font-size:1rem}
+@media(max-width:600px){
+  .founder-section{flex-direction:column;text-align:center}
+}
+
+/* ── CTA ── */
+.cta-section{text-align:center;padding:6rem 2rem;background:radial-gradient(ellipse at center,rgba(251,146,60,0.06) 0%,transparent 70%)}
+.cta-section h2{font-family:var(--font-heading);font-size:clamp(2rem,5vw,3rem);font-weight:700;color:#fff;margin-bottom:1rem}
+.cta-section p{color:var(--text-dim);font-size:1.1rem;margin-bottom:2rem;max-width:500px;margin-left:auto;margin-right:auto}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--card-border);padding:3rem 2rem;text-align:center}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:1.5rem}
+.footer-brand{display:flex;align-items:center;gap:.5rem}
+.footer-brand img{height:28px;width:28px}
+.footer-brand span{font-family:var(--font-heading);font-weight:700;color:#fff}
+.footer-links{display:flex;gap:1.5rem;flex-wrap:wrap}
+.footer-links a{color:var(--text-dim);font-size:.9rem;transition:color .3s}
+.footer-links a:hover{color:var(--orange)}
+.footer-copy{width:100%;text-align:center;color:var(--text-dim);font-size:.8rem;margin-top:1rem}
+@media(max-width:600px){
+  .footer-inner{flex-direction:column;text-align:center}
+}
+
+/* ── COUNTERS ── */
+.counters{display:flex;gap:3rem;justify-content:center;margin-top:3rem;flex-wrap:wrap}
+.counter-item{text-align:center}
+.counter-num{font-family:var(--font-heading);font-size:2.4rem;font-weight:700;color:#fff}
+.counter-num .suffix{font-size:1.4rem}
+.counter-label{color:var(--text-dim);font-size:.85rem;margin-top:.2rem}
+
+/* ── FADE IN ── */
+.fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
 </style>
 </head>
 <body>
 
-
-
-
-<!-- Cursor Glow -->
-<div id="cursor-glow"></div>
-
-<!-- Particles Container -->
-<div id="particles"></div>
-
-<!-- Grid Background -->
-<div class="grid-bg"></div>
-
-<!-- Navigation -->
+<!-- NAV -->
 <nav>
-<div class="nav-inner">
-<a href="#hero" class="logo-area"><img src="logo.png" alt="RoofPilot"><span>RoofPilot</span></a>
-<div class="nav-links" id="navLinks" style="display:none" id="navLinks">
-<a href="#features">Features</a>
-<a href="#pricing">Pricing</a>
-<a href="#comparison">Compare</a>
-<a href="#founder">About</a>
-<a href="https://trustman-crm-production.up.railway.app/register" class="nav-cta">Start Free Trial</a>
-</div>
-<div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
-<span></span><span></span><span></span>
-</div>
-</div>
+  <a href="#" class="nav-logo">
+    <img src="logo.png" alt="RoofPilot">
+    <span>RoofPilot</span>
+  </a>
+  <button class="hamburger" id="hamburger" aria-label="Menu">☰</button>
+  <div class="nav-links" id="navLinks">
+    <a href="#features">Features</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#compare">Compare</a>
+    <a href="#founder">About</a>
+    <a href="https://trustman-crm-production.up.railway.app/register" class="nav-cta">Start Free Trial</a>
+  </div>
 </nav>
 
+<!-- PARTICLES -->
+<div class="particles" id="particles"></div>
+
 <!-- HERO -->
-<section id="hero">
-<div class="hero-gradient"></div>
-<div class="radar">
-<div class="radar-circle"></div>
-<div class="radar-circle"></div>
-<div class="radar-circle"></div>
-<div class="radar-sweep"></div>
-</div>
-<div class="hero-content">
-<div class="hero-badge reveal"><span class="dot"></span>Now in Beta — Join 50+ Roofing Companies</div>
-<h1 class="hero-title">
-<span class="line1">ROOFPILOT</span>
-<span class="line2" id="typed-text"></span><span class="typing-cursor" id="cursor"></span>
-</h1>
-<p class="hero-sub reveal">The command center built for roofing contractors who refuse to overpay. Hail maps, satellite measurements, AI job advisor — everything you need, nothing you don't.</p>
-<div class="hero-buttons reveal">
-<div class="btn-primary-wrap">
-<a href="https://trustman-crm-production.up.railway.app/register" class="btn-primary">Start Free Trial →</a>
-<div class="pulse-ring"></div>
-</div>
-<a href="#features" class="btn-secondary">See Features</a>
-</div>
-<div class="stats-bar">
-<div class="stat-card reveal">
-<div class="stat-number" data-target="70" data-prefix="" data-suffix="%">0%</div>
-<div class="stat-label">Cost Savings</div>
-</div>
-<div class="stat-card reveal">
-<div class="stat-number" data-target="149" data-prefix="$" data-suffix="/mo">$0/mo</div>
-<div class="stat-label">Starting Price</div>
-</div>
-<div class="stat-card reveal">
-<div class="stat-number" data-target="14" data-prefix="" data-suffix=" Days">0 Days</div>
-<div class="stat-label">Free Trial</div>
-</div>
-</div>
-</div>
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <div class="radar">
+      <div class="radar-circle"></div>
+      <div class="radar-circle"></div>
+      <div class="radar-circle"></div>
+      <div class="radar-sweep"></div>
+    </div>
+  </div>
+  <div class="hero-content fade-in">
+    <h1 class="hero-title">ROOFPILOT</h1>
+    <div class="typing-wrapper">
+      <span class="typing-text" id="typingText"><span class="cursor"></span></span>
+    </div>
+    <p class="hero-sub">The all-in-one roofing platform that replaces expensive software. Built by a roofer who was tired of overpaying.</p>
+    <div class="hero-buttons">
+      <a href="https://trustman-crm-production.up.railway.app/register" class="btn-primary">Start Free Trial</a>
+      <a href="#features" class="btn-outline">See Features</a>
+    </div>
+    <div class="counters">
+      <div class="counter-item"><div class="counter-num" data-target="500" data-suffix="+">0</div><div class="counter-label">Jobs Managed</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="98" data-suffix="%">0</div><div class="counter-label">Uptime</div></div>
+      <div class="counter-item"><div class="counter-num" data-target="4200" data-suffix="">0</div><div class="counter-label">Avg. Saved / Year</div></div>
+    </div>
+  </div>
 </section>
 
 <!-- PROBLEM -->
 <section id="problem">
-<div class="container">
-<div class="section-label reveal">The Problem</div>
-<h2 class="section-title reveal">Still paying <span style="color:var(--red)">$500+/mo</span> for Competitors?</h2>
-<p class="section-desc reveal">You're bleeding money on bloated software built for enterprise — not your crew. RoofPilot gives you everything Competitors does, minus the corporate price tag.</p>
-
-<div class="price-battle reveal-scale">
-<div class="price-card-old">
-<div class="brand">Competitors</div>
-<div class="price">$500<span style="font-size:1.5rem">+</span></div>
-<div class="per">per month</div>
-</div>
-<div class="vs-circle">VS</div>
-<div class="price-card-new">
-<div class="brand">RoofPilot</div>
-<div class="price" data-count-target="149" data-count-prefix="$">$149</div>
-<div class="per">per month</div>
-<div class="save">Save $4,200+/year</div>
-</div>
-</div>
-
-<div class="problem-features">
-<div class="problem-feat reveal"><span class="check">✓</span> Same powerful features</div>
-<div class="problem-feat reveal"><span class="check">✓</span> No long-term contracts</div>
-<div class="problem-feat reveal"><span class="check">✓</span> 14-day free trial</div>
-<div class="problem-feat reveal"><span class="check">✓</span> Built by an actual roofer</div>
-</div>
-</div>
+  <div class="container text-center fade-in">
+    <div class="section-label">The Problem</div>
+    <h2 class="section-title">Stop Overpaying for Roofing Software</h2>
+    <p class="section-sub mx-auto">Other platforms charge $500+/mo for the same tools. RoofPilot gives you everything you need at a fraction of the cost.</p>
+    <div class="problem-grid">
+      <div class="problem-card competitor">
+        <h3>Competitors</h3>
+        <div class="problem-price">$500+<span style="font-size:1rem;color:var(--text-dim)">/mo</span></div>
+        <p>Bloated features you'll never use. Long contracts. Hidden fees.</p>
+      </div>
+      <div class="problem-card roofpilot">
+        <h3>RoofPilot</h3>
+        <div class="problem-price">$149<span style="font-size:1rem;color:var(--text-dim)">/mo</span></div>
+        <p>Everything you need. No contracts. No surprises. Built for roofers.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- FEATURES -->
 <section id="features">
-<div class="container">
-<div style="text-align:center;margin-bottom:60px">
-<div class="section-label reveal">Capabilities</div>
-<h2 class="section-title reveal" style="max-width:600px;margin-left:auto;margin-right:auto">Everything you need to <span style="color:var(--cyan)">dominate</span> your market</h2>
-</div>
-<div class="features-grid">
-<div class="feature-card reveal">
-<div class="feature-icon">📋</div>
-<h3>Job Pipeline & Tracking</h3>
-<p>Visual drag-and-drop pipeline. Track every job from lead to close with real-time status updates.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">🛰️</div>
-<h3>Satellite Roof Measurements</h3>
-<p>Instant satellite-powered roof measurements. No ladder needed — get accurate square footage in seconds.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">🌩️</div>
-<h3>Hail Maps & Storm Tracking</h3>
-<p>Real-time hail and storm maps. Be the first crew on-site after severe weather hits your area.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">📞</div>
-<h3>Automated Adjuster Follow-ups</h3>
-<p>Never let a claim slip through the cracks. Automated follow-up sequences keep adjusters on schedule.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">💰</div>
-<h3>Invoicing & Payments</h3>
-<p>Create professional invoices and collect payments directly. Integrated billing that closes the loop.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">👥</div>
-<h3>Team Management & Commissions</h3>
-<p>Track your crew's performance. Automated commission calculations and transparent payout tracking.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">🤖</div>
-<h3>AI-Powered Job Advisor</h3>
-<p>Get intelligent recommendations on pricing, materials, and scheduling powered by machine learning.</p>
-</div>
-<div class="feature-card reveal">
-<div class="feature-icon">📱</div>
-<h3>Mobile-Ready PWA</h3>
-<p>Works on any device, anywhere. Install it like an app — no App Store needed. Built for the field.</p>
-</div>
-</div>
-</div>
+  <div class="container fade-in">
+    <div class="text-center">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything Your Roofing Business Needs</h2>
+      <p class="section-sub mx-auto">Powerful tools designed specifically for roofing contractors. No fluff.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">📋</span>
+        <h3>Job Pipeline</h3>
+        <p>Track every job from lead to completion with a visual drag-and-drop pipeline.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🛰️</span>
+        <h3>Satellite Measurements</h3>
+        <p>Get accurate roof measurements from satellite imagery — no ladder needed.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🌩️</span>
+        <h3>Hail Maps</h3>
+        <p>Real-time hail and storm tracking to find leads before your competition.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📞</span>
+        <h3>Auto Adjuster Follow-ups</h3>
+        <p>Automated follow-ups with insurance adjusters so nothing falls through the cracks.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">💰</span>
+        <h3>Invoicing</h3>
+        <p>Create and send professional invoices in seconds. Get paid faster.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">👥</span>
+        <h3>Team Management</h3>
+        <p>Assign jobs, manage crews, and track progress across your entire team.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🤖</span>
+        <h3>AI Job Advisor</h3>
+        <p>AI-powered recommendations to optimize pricing, scheduling, and profitability.</p>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📱</span>
+        <h3>Mobile PWA</h3>
+        <p>Works on any device. Install it like an app — no app store needed.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- PRICING -->
 <section id="pricing">
-<div class="container">
-<div style="text-align:center;margin-bottom:60px">
-<div class="section-label reveal">Pricing</div>
-<h2 class="section-title reveal">Transparent pricing. <span style="color:var(--orange)">No surprises.</span></h2>
-<p class="section-desc reveal" style="margin-left:auto;margin-right:auto">Every plan includes a 14-day free trial. No credit card required.</p>
-</div>
-<div class="pricing-grid">
-<!-- Starter -->
-<div class="pricing-card reveal">
-<div class="pricing-tier">Starter</div>
-<div class="pricing-price">$149</div>
-<div class="pricing-period">/month</div>
-<div class="pricing-users">Up to 3 users</div>
-<ul class="pricing-features">
-<li><span class="check">✓</span> Job Pipeline & Tracking</li>
-<li><span class="check">✓</span> Contact Management</li>
-<li><span class="check">✓</span> Invoicing & Payments</li>
-<li><span class="check">✓</span> Adjuster Follow-ups</li>
-<li><span class="check">✓</span> Mobile PWA Access</li>
-<li><span class="check">✓</span> Email Support</li>
-</ul>
-<a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn pricing-btn-outline">Start Free Trial</a>
-<div class="pricing-trial">14-day free trial included</div>
-</div>
-<!-- Professional -->
-<div class="pricing-card popular reveal">
-<div class="popular-badge">Most Popular</div>
-<div class="pricing-tier">Professional</div>
-<div class="pricing-price">$249</div>
-<div class="pricing-period">/month</div>
-<div class="pricing-users">Unlimited users</div>
-<ul class="pricing-features">
-<li><span class="check">✓</span> Everything in Starter</li>
-<li><span class="check">✓</span> Hail Maps & Storm Tracking</li>
-<li><span class="check">✓</span> Satellite Roof Measurements</li>
-<li><span class="check">✓</span> Team Commissions</li>
-<li><span class="check">✓</span> Advanced Reports</li>
-<li><span class="check">✓</span> Priority Email + Chat Support</li>
-</ul>
-<a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn pricing-btn-fill">Start Free Trial</a>
-<div class="pricing-trial">14-day free trial included</div>
-</div>
-<!-- Enterprise -->
-<div class="pricing-card reveal">
-<div class="pricing-tier">Enterprise</div>
-<div class="pricing-price">$349</div>
-<div class="pricing-period">/month</div>
-<div class="pricing-users">Unlimited everything</div>
-<ul class="pricing-features">
-<li><span class="check">✓</span> Everything in Professional</li>
-<li><span class="check">✓</span> AI-Powered Job Advisor</li>
-<li><span class="check">✓</span> Custom Integrations</li>
-<li><span class="check">✓</span> Dedicated Account Manager</li>
-<li><span class="check">✓</span> White-label Options</li>
-<li><span class="check">✓</span> Priority Phone Support</li>
-</ul>
-<a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn pricing-btn-outline">Start Free Trial</a>
-<div class="pricing-trial">14-day free trial included</div>
-</div>
-</div>
-</div>
+  <div class="container fade-in">
+    <div class="text-center">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Simple, Honest Pricing</h2>
+      <p class="section-sub mx-auto">No hidden fees. No long-term contracts. Start with a 14-day free trial.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Starter</div>
+        <div class="pricing-price">$149<span>/mo</span></div>
+        <ul class="pricing-features">
+          <li>Job Pipeline</li>
+          <li>Satellite Measurements</li>
+          <li>Hail Maps</li>
+          <li>Invoicing</li>
+          <li>Mobile PWA</li>
+          <li>Email Support</li>
+        </ul>
+        <a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn">Start Free Trial</a>
+        <div class="pricing-trial">14-day free trial · No credit card required</div>
+      </div>
+      <!-- Pro -->
+      <div class="pricing-card popular">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price">$249<span>/mo</span></div>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li>Auto Adjuster Follow-ups</li>
+          <li>Team Management</li>
+          <li>AI Job Advisor</li>
+          <li>Priority Support</li>
+          <li>Custom Branding</li>
+        </ul>
+        <a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn">Start Free Trial</a>
+        <div class="pricing-trial">14-day free trial · No credit card required</div>
+      </div>
+      <!-- Enterprise -->
+      <div class="pricing-card">
+        <div class="pricing-tier">Enterprise</div>
+        <div class="pricing-price">$349<span>/mo</span></div>
+        <ul class="pricing-features">
+          <li>Everything in Pro</li>
+          <li>Unlimited Users</li>
+          <li>API Access</li>
+          <li>Dedicated Account Manager</li>
+          <li>Custom Integrations</li>
+          <li>White-Label Option</li>
+        </ul>
+        <a href="https://trustman-crm-production.up.railway.app/register" class="pricing-btn">Start Free Trial</a>
+        <div class="pricing-trial">14-day free trial · No credit card required</div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- COMPARISON -->
-<section id="comparison">
-<div class="container">
-<div style="text-align:center;margin-bottom:60px">
-<div class="section-label reveal">Compare</div>
-<h2 class="section-title reveal">See how RoofPilot <span style="color:var(--cyan)">stacks up</span></h2>
-</div>
-<div class="comp-table-wrap reveal">
-<table class="comp-table">
-<thead>
-<tr>
-<th>Feature</th>
-<th class="highlight">RoofPilot</th>
-<th>Competitors</th>
-<th>JobNimbus</th>
-<th>Roofr</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Starting Price</td>
-<td class="highlight price-cell good">$149/mo</td>
-<td class="price-cell bad">$500+/mo</td>
-<td class="price-cell bad">$200+/mo</td>
-<td class="price-cell bad">$89+/mo*</td>
-</tr>
-<tr>
-<td>Hail Maps & Storm Tracking</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-</tr>
-<tr>
-<td>Satellite Measurements</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="yes">✓</span></td>
-</tr>
-<tr>
-<td>AI Job Advisor</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-</tr>
-<tr>
-<td>Adjuster Follow-ups</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-</tr>
-<tr>
-<td>Team Commissions</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-</tr>
-<tr>
-<td>Mobile PWA</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="yes">✓</span></td>
-<td><span class="yes">✓</span></td>
-</tr>
-<tr>
-<td>No Long-term Contract</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="yes">✓</span></td>
-<td><span class="yes">✓</span></td>
-</tr>
-<tr>
-<td>Built by a Roofer</td>
-<td class="highlight"><span class="yes">✓</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-<td><span class="no">✗</span></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p class="reveal" style="text-align:center;color:var(--gray);font-size:0.8rem;margin-top:16px">*Roofr CRM pricing requires additional per-report fees for measurements</p>
-</div>
+<section id="compare">
+  <div class="container fade-in">
+    <div class="text-center">
+      <div class="section-label">Compare</div>
+      <h2 class="section-title">RoofPilot vs. The Competition</h2>
+      <p class="section-sub mx-auto">See why roofers are making the switch.</p>
+    </div>
+    <table class="comparison-table">
+      <thead>
+        <tr><th>Feature</th><th>RoofPilot</th><th>Competitors</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Starting Price</td><td style="color:var(--green);font-weight:600">$149/mo</td><td style="color:var(--red)">$500+/mo</td></tr>
+        <tr><td>Satellite Measurements</td><td class="check">✓</td><td class="check">✓</td></tr>
+        <tr><td>Hail Maps</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>AI Job Advisor</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>Auto Adjuster Follow-ups</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>Mobile PWA</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>No Long-Term Contracts</td><td class="check">✓</td><td class="cross">✗</td></tr>
+        <tr><td>Built by a Roofer</td><td class="check">✓</td><td class="cross">✗</td></tr>
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <!-- FOUNDER -->
 <section id="founder">
-<div class="container">
-<div class="section-label reveal">Our Story</div>
-<h2 class="section-title reveal">Built by a roofer, <span style="color:var(--orange)">for roofers.</span></h2>
-<div class="founder-grid" style="margin-top:40px">
-<div class="founder-avatar reveal-left">🏠</div>
-<div class="reveal-right">
-<div class="founder-quote">"I got tired of paying $500+ a month for software that wasn't built for <span>how roofers actually work.</span> So I built my own."</div>
-<div class="founder-name">Jason T.</div>
-<div class="founder-role">Founder, RoofPilot</div>
-<p class="founder-text">After years in the roofing trenches — climbing ladders, chasing adjusters, managing crews — Jason realized the CRM tools on the market were either overpriced, overengineered, or completely disconnected from the reality of running a roofing company. RoofPilot was born from that frustration: a tool that actually understands the roofing workflow, at a price that respects your margins.</p>
-</div>
-</div>
-</div>
+  <div class="container fade-in">
+    <div class="text-center">
+      <div class="section-label">Our Story</div>
+      <h2 class="section-title">Built by a Roofer, for Roofers</h2>
+    </div>
+    <div class="founder-section">
+      <div class="founder-img">🏗️</div>
+      <div class="founder-text">
+        <h3>Jason T.</h3>
+        <div class="founder-role">Founder, RoofPilot</div>
+        <p>I spent years paying $500+/mo for roofing software that was built by tech companies — not roofers. Half the features didn't apply to my business, and the ones that did were overcomplicated. So I built RoofPilot. Every feature exists because I needed it on the job. No bloat, no fluff — just the tools that actually move the needle for roofing contractors. If you're tired of overpaying for software that doesn't get roofing, you're in the right place.</p>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- CTA -->
-<section id="cta">
-<div class="container">
-<h2 class="cta-title reveal-scale">Ready to <span>Take Control?</span></h2>
-<p class="cta-sub reveal">Join the roofing contractors who are done overpaying. Start your 14-day free trial today.</p>
-<a href="https://trustman-crm-production.up.railway.app/register" class="cta-btn reveal-scale">Start Free Trial — It's Free →</a>
-<div class="cta-trust reveal">
-<span>🔒 No credit card required</span>
-<span>⚡ Setup in 5 minutes</span>
-<span>🚀 Cancel anytime</span>
-</div>
-</div>
+<section class="cta-section">
+  <div class="container fade-in">
+    <h2>Ready to Take Control?</h2>
+    <p>Join roofers who are saving thousands and running smarter businesses with RoofPilot.</p>
+    <a href="https://trustman-crm-production.up.railway.app/register" class="btn-primary">Start Your 14-Day Free Trial</a>
+  </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-<div class="footer-grid">
-<div class="footer-brand">
-<div class="logo-area"><img src="logo.png" alt="RoofPilot"><span>RoofPilot</span></div>
-<p>The modern CRM built specifically for roofing contractors. Take control of your business.</p>
-<p style="margin-top:8px"><a href="mailto:info@getroofpilot.com" style="color:var(--cyan);text-decoration:none">info@getroofpilot.com</a></p>
-<p><a href="tel:6365417005" style="color:var(--gray);text-decoration:none">(636) 541-7005</a></p>
-</div>
-<div class="footer-col">
-<h4>Product</h4>
-<a href="#features">Features</a>
-<a href="#pricing">Pricing</a>
-<a href="#comparison">Compare</a>
-<a href="https://trustman-crm-production.up.railway.app/register">Free Trial</a>
-</div>
-<div class="footer-col">
-<h4>Company</h4>
-<a href="#founder">About</a>
-<a href="mailto:info@getroofpilot.com">Contact</a>
-<a href="#">Privacy Policy</a>
-<a href="#">Terms of Service</a>
-</div>
-<div class="footer-col">
-<h4>Resources</h4>
-<a href="#">Help Center</a>
-<a href="#">Blog</a>
-<a href="#">API Docs</a>
-<a href="#">Status</a>
-</div>
-</div>
-<div class="footer-bottom">
-<p>© 2026 RoofPilot. All rights reserved.</p>
-<p>Built with 🧡 in Missouri</p>
-</div>
+  <div class="footer-inner">
+    <a href="#" class="footer-brand">
+      <img src="logo.png" alt="RoofPilot">
+      <span>RoofPilot</span>
+    </a>
+    <div class="footer-links">
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#compare">Compare</a>
+      <a href="mailto:info@getroofpilot.com">info@getroofpilot.com</a>
+      <a href="tel:+16365417005">(636) 541-7005</a>
+    </div>
+    <div class="footer-copy">&copy; 2026 RoofPilot. All rights reserved.</div>
+  </div>
 </footer>
 
-
-
-
-
-
-
 <script>
-// Force scroll to top
-window.scrollTo(0,0);
-window.addEventListener('load',function(){window.scrollTo(0,0)});
-
-// Mobile menu
 (function(){
-  var btn=document.querySelector('.mobile-menu');
-  var nav=document.getElementById('navLinks');
-  if(!btn||!nav)return;
-  var open=false;
-  function update(){
-    if(window.innerWidth>768){nav.style.cssText='display:flex';return}
-    if(open){nav.style.cssText='display:flex;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(10,10,15,0.97);backdrop-filter:blur(20px);flex-direction:column;padding:40px 24px;gap:20px;z-index:999;text-align:center;align-items:center'}
-    else{nav.style.cssText='display:none'}
-  }
-  btn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();open=!open;update()});
-  nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){open=false;update()})});
-  window.addEventListener('resize',update);
-  update();
-})();
+  /* ── Scroll to top on load ── */
+  window.scrollTo(0,0);
 
-// Nav scroll effect
-window.addEventListener('scroll',function(){
-  var n=document.getElementById('nav');
-  if(n)n.classList.toggle('scrolled',window.scrollY>50);
-});
+  /* ── Hamburger ── */
+  var hamburger = document.getElementById('hamburger');
+  var navLinks = document.getElementById('navLinks');
+  hamburger.addEventListener('click', function(){
+    navLinks.classList.toggle('open');
+    hamburger.textContent = navLinks.classList.contains('open') ? '✕' : '☰';
+  });
+  /* Close nav on link click (mobile) */
+  navLinks.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      hamburger.textContent = '☰';
+    });
+  });
 
-// Typing effect
-(function(){
-  var el=document.getElementById('typed-text');
-  if(!el)return;
-  var words=['TAKE CONTROL.','SAVE THOUSANDS.','WORK SMARTER.'];
-  var wi=0,ci=0,deleting=false;
-  function type(){
-    var word=words[wi];
-    if(!deleting){
-      el.textContent=word.substring(0,ci+1);
-      ci++;
-      if(ci===word.length){deleting=true;setTimeout(type,2000);return}
-    }else{
-      el.textContent=word.substring(0,ci-1);
-      ci--;
-      if(ci===0){deleting=false;wi=(wi+1)%words.length}
+  /* ── Particles ── */
+  var particleContainer = document.getElementById('particles');
+  function createParticles(){
+    for(var i = 0; i < 40; i++){
+      var p = document.createElement('div');
+      p.className = 'particle';
+      var size = Math.random() * 3 + 1;
+      var colors = ['rgba(251,146,60,0.6)','rgba(6,182,212,0.6)','rgba(255,255,255,0.3)'];
+      p.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+Math.random()*100+'%;background:'+colors[Math.floor(Math.random()*colors.length)]+';animation-duration:'+(Math.random()*12+8)+'s;animation-delay:'+(Math.random()*10)+'s;';
+      particleContainer.appendChild(p);
     }
-    setTimeout(type,deleting?50:100);
   }
-  type();
-})();
+  createParticles();
 
-// Scroll animations (fade in)
-(function(){
-  var obs=new IntersectionObserver(function(entries){
-    entries.forEach(function(e){if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})
-  },{threshold:0.1});
-  document.querySelectorAll('.fade-up,.reveal,.reveal-left,.reveal-right,.reveal-scale').forEach(function(el){obs.observe(el)});
-})();
+  /* ── Typing Effect ── */
+  var phrases = ['TAKE CONTROL.','SAVE THOUSANDS.','WORK SMARTER.'];
+  var el = document.getElementById('typingText');
+  var phraseIdx = 0, charIdx = 0, deleting = false, pauseTimer = 0;
+  function typeLoop(){
+    var current = phrases[phraseIdx];
+    if(!deleting){
+      charIdx++;
+      if(charIdx > current.length){
+        pauseTimer++;
+        if(pauseTimer > 30){
+          deleting = true;
+          pauseTimer = 0;
+        }
+        requestAnimationFrame(function(){setTimeout(typeLoop,50)});
+        return;
+      }
+    } else {
+      charIdx--;
+      if(charIdx < 0){
+        charIdx = 0;
+        deleting = false;
+        phraseIdx = (phraseIdx + 1) % phrases.length;
+        requestAnimationFrame(function(){setTimeout(typeLoop,400)});
+        return;
+      }
+    }
+    el.innerHTML = current.substring(0, charIdx) + '<span class="cursor"></span>';
+    requestAnimationFrame(function(){setTimeout(typeLoop, deleting ? 40 : 80)});
+  }
+  typeLoop();
 
-// Counter animation
-(function(){
-  var obs=new IntersectionObserver(function(entries){
+  /* ── Scroll fade-in ── */
+  var faders = document.querySelectorAll('.fade-in');
+  var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(e){
       if(e.isIntersecting){
-        var el=e.target;
-        var target=parseInt(el.getAttribute('data-count'))||0;
-        var prefix=el.getAttribute('data-prefix')||'';
-        var suffix=el.getAttribute('data-suffix')||'';
-        var duration=1500;
-        var start=0;
-        var startTime=null;
-        function animate(ts){
-          if(!startTime)startTime=ts;
-          var progress=Math.min((ts-startTime)/duration,1);
-          var val=Math.floor(progress*target);
-          el.textContent=prefix+val+suffix;
-          if(progress<1)requestAnimationFrame(animate);
-          else el.textContent=prefix+target+suffix;
-        }
-        requestAnimationFrame(animate);
-        obs.unobserve(el);
+        e.target.classList.add('visible');
       }
     });
-  },{threshold:0.5});
-  document.querySelectorAll('[data-count]').forEach(function(el){obs.observe(el)});
+  }, {threshold:0.15});
+  faders.forEach(function(f){observer.observe(f)});
+
+  /* ── Animated counters ── */
+  var counterEls = document.querySelectorAll('.counter-num');
+  var counterDone = false;
+  var counterObserver = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting && !counterDone){
+        counterDone = true;
+        animateCounters();
+      }
+    });
+  }, {threshold:0.5});
+  counterEls.forEach(function(c){counterObserver.observe(c)});
+
+  function animateCounters(){
+    counterEls.forEach(function(el){
+      var target = parseInt(el.getAttribute('data-target'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var prefix = target > 1000 ? '$' : '';
+      var duration = 2000;
+      var start = performance.now();
+      function step(now){
+        var progress = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        var val = Math.floor(eased * target);
+        el.innerHTML = prefix + val.toLocaleString() + '<span class="suffix">' + suffix + '</span>';
+        if(progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    });
+  }
+
+  /* ── Smooth scroll for anchor links ── */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var target = document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
 })();
 </script>
 </body>
