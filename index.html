@@ -716,5 +716,15 @@ document.querySelectorAll('#navLinks a').forEach(a=>{
 a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open'));
 });
 </script>
+<script>
+document.querySelector('.mobile-menu').addEventListener('click', function() {
+  document.getElementById('nav').classList.toggle('mobile-nav-open');
+});
+document.querySelectorAll('.nav-links a').forEach(function(a) {
+  a.addEventListener('click', function() {
+    document.getElementById('nav').classList.remove('mobile-nav-open');
+  });
+});
+</script>
 </body>
 </html>
