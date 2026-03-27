@@ -265,7 +265,7 @@ section{padding:70px 16px}
 <nav>
 <div class="nav-inner">
 <a href="#hero" class="logo-area"><img src="logo.png" alt="RoofPilot"><span>RoofPilot</span></a>
-<div class="nav-links" id="navLinks">
+<div class="nav-links" id="navLinks" style="display:none" id="navLinks">
 <a href="#features">Features</a>
 <a href="#pricing">Pricing</a>
 <a href="#comparison">Compare</a>
@@ -726,5 +726,61 @@ document.querySelectorAll('.nav-links a').forEach(function(a) {
   });
 });
 </script>
+
+<script>
+(function(){
+  var btn = document.querySelector('.mobile-menu');
+  var links = document.getElementById('navLinks');
+  var isOpen = false;
+  if(btn && links) {
+    // On desktop, show nav-links
+    function checkWidth() {
+      if(window.innerWidth > 768) {
+        links.style.display = 'flex';
+      } else {
+        links.style.display = isOpen ? 'flex' : 'none';
+        if(isOpen) {
+          links.style.position = 'fixed';
+          links.style.top = '60px';
+          links.style.left = '0';
+          links.style.right = '0';
+          links.style.bottom = '0';
+          links.style.background = 'rgba(10,10,15,0.97)';
+          links.style.backdropFilter = 'blur(20px)';
+          links.style.flexDirection = 'column';
+          links.style.padding = '40px 24px';
+          links.style.gap = '20px';
+          links.style.zIndex = '999';
+          links.style.textAlign = 'center';
+          links.style.alignItems = 'center';
+        } else {
+          links.style.position = '';
+          links.style.top = '';
+          links.style.left = '';
+          links.style.right = '';
+          links.style.bottom = '';
+          links.style.background = '';
+          links.style.flexDirection = '';
+          links.style.padding = '';
+          links.style.gap = '';
+          links.style.zIndex = '';
+          links.style.textAlign = '';
+          links.style.alignItems = '';
+        }
+      }
+    }
+    btn.addEventListener('click', function(){
+      isOpen = !isOpen;
+      checkWidth();
+    });
+    links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ isOpen = false; checkWidth(); });
+    });
+    window.addEventListener('resize', function(){ checkWidth(); });
+    checkWidth();
+  }
+})();
+</script>
+
 </body>
 </html>
