@@ -161,6 +161,16 @@ footer{border-top:1px solid var(--card-border);padding:3rem 2rem;text-align:cent
 /* ── FADE IN ── */
 .fade-in{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
+
+.feature-card.featured{border:2px solid var(--orange);background:rgba(251,146,60,0.08);transform:scale(1.02)}
+.feature-card.featured .feature-icon{font-size:3rem}
+.feature-card.featured h3{color:var(--orange);font-size:1.2rem}
+.feature-card.featured-cyan{border:2px solid var(--cyan);background:rgba(6,182,212,0.08);transform:scale(1.02)}
+.feature-card.featured-cyan .feature-icon{font-size:3rem}
+.feature-card.featured-cyan h3{color:var(--cyan);font-size:1.2rem}
+.feature-card.featured-green{border:2px solid #22c55e;background:rgba(34,197,94,0.08);transform:scale(1.02)}
+.feature-card.featured-green .feature-icon{font-size:3rem}
+.feature-card.featured-green h3{color:#22c55e;font-size:1.2rem}
 </style>
 </head>
 <body>
@@ -288,19 +298,19 @@ footer{border-top:1px solid var(--card-border);padding:3rem 2rem;text-align:cent
         <p>Works on any device. Install it like an app — no app store needed.</p>
       </div>
     </div>
-      <div class="feature-card reveal">
+      <div class="feature-card featured-cyan reveal">
         <div class="feature-icon">✍️</div>
-        <h3>Click & Sign Contracts</h3>
+        <h3>⭐ Click & Sign Contracts</h3>
         <p>Send contracts to customers and get them signed digitally — no DocuSign needed. Built right in.</p>
       </div>
-      <div class="feature-card reveal">
+      <div class="feature-card featured-green reveal">
         <div class="feature-icon">⚡</div>
-        <h3>Switch in Minutes</h3>
+        <h3>⭐ Switch in Minutes</h3>
         <p>Transfer all your data from AccuLynx, JobNimbus, or any CRM directly to RoofPilot. Upload a CSV and you're done. No data left behind.</p>
       </div>
-      <div class="feature-card reveal">
+      <div class="feature-card featured reveal">
         <div class="feature-icon">🏠</div>
-        <h3>Customer Portal</h3>
+        <h3>⭐ Customer Portal</h3>
         <p>Your customers see exactly where their project stands — no more phone calls asking for updates. Real-time status, photos, invoices, and payments in one link.</p>
       </div>
   </div>
